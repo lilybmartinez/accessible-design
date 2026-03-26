@@ -66,31 +66,36 @@
 
 <div class="container">
 	<h1>CRUD (Accessibility Issues)</h1>
-	<h3>Student Records</h3>
+	<h2>Student Records</h2>
 
 	<div class="intro card">
-		<img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80" />
+		<img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80" 
+		alt="Student using a tablet device"/>
 		<p class="helper-text">Use this page to quickly manage people in the system.</p>
-		<p><a class="text-link" href="/">Click here</a> to review the latest updates.</p>
-		<a class="ghost-link" href="/"></a>
+		<p><a class="text-link" href="/">View latest updates</a> to review the latest updates.</p>
 	</div>
 
 	<div class="card">
 		<h2>{editId ? 'Edit Person' : 'Add Person'}</h2>
-		<h4 class="visually-hidden"></h4>
 		<form onsubmit={handleSubmit} aria-describedby="missing-form-help">
 			<fieldset>
+			  <main>
 				<div class="form-group">
-					<input id="person-field" type="text" placeholder="First Name" bind:value={firstName} required />
+					<label for="first-name">First Name</label>
+					<input id="first-name" type="text" bind:value={firstName} required />
 				</div>
 				
 				<div class="form-group">
-					<input id="person-field" type="text" placeholder="Last Name" bind:value={lastName} required />
+					<label for="last-name">Last Name</label>
+					<input id="last-name" type="text" bind:value={lastName} required />
 				</div>
-				
+		
 				<div class="form-group">
-					<input id="person-field" type="number" placeholder="Age" bind:value={age} required />
+					<label for="age">Age</label>
+					<input id="age" type="number" bind:value={age}>
 				</div>
+			  </main>
+				<legend>Add or edit a student</legend>
 			</fieldset>
 			
 			<div class="actions">
@@ -99,19 +104,23 @@
 					<button type="button" class="secondary" onclick={cancelEdit}>Cancel</button>
 				{/if}
 			</div>
+		
 		</form>
 	</div>
+	<p id="missing-form-help" class="visually-hidden">
+		Fill out all required fields before submitting.
+	</p>
 
 	<div class="card">
 		<h2>People List</h2>
 		<table>
 			<thead>
 				<tr>
-				  <td>ID</td>
-					<td>First Name</td>
-					<td>Last Name</td>
-					<td>Age</td>
-					<td>Actions</td>
+					<th scope="col">ID</th>
+					<th scope="col">First Name</th>
+					<th scope="col">Last Name</th>
+					<th scope="col">Age</th>
+					<th scope="col">Actions</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -122,14 +131,26 @@
 						<td>{item.lastName}</td>
 						<td>{item.age}</td>
 						<td>
-							<button class="small icon-button" tabindex="2" onclick={() => startEdit(item)}><span aria-hidden="true">✎</span></button>
-							<button class="small danger icon-button" tabindex="4" onclick={() => deleteItem(item.id)}><span aria-hidden="true">✕</span></button>
+							<button 
+							   class="small icon-button" 
+							   onclick={() => startEdit(item)}
+							   aria-label={`Edit ${item.firstName} ${item.lastName}`}
+							>
+								<span aria-hidden="true">✏️</span>
+							</button>
+							<button 
+							   class="small icon-button danger" 
+							   onclick={() => deleteItem(item.id)}
+							   aria-label={`Delete ${item.firstName} ${item.lastName}`}
+							>
+								<span aria-hidden="true">🗑️</span>
+							</button>
 						</td>
 					</tr>
 				{/each}
 				{#if items.length === 0}
 					<tr>
-						<td colspan="4" style="text-align: center;">No data found</td>
+						<td colspan="5" style="text-align: center;">No data found</td>
 					</tr>
 				{/if}
 			</tbody>
@@ -147,13 +168,6 @@
 	
 	h1 { margin-bottom: 20px; }
 
-	h3 {
-		margin-top: -10px;
-		margin-bottom: 20px;
-		font-size: 1rem;
-		font-weight: normal;
-	}
-	
 	.card {
 		border: 1px solid #ddd;
 		padding: 20px;
@@ -181,20 +195,12 @@
 	}
 
 	.helper-text {
-		color: #c7c7c7;
+		color: #555;
 		margin-bottom: 12px;
 	}
 
 	.text-link {
 		color: #6b7280;
-	}
-
-	.ghost-link {
-		display: inline-block;
-		width: 24px;
-		height: 24px;
-		border: 1px solid #ddd;
-		border-radius: 999px;
 	}
 	
 	input {
@@ -213,22 +219,24 @@
 	
 	button {
 		padding: 8px 16px;
-		background-color: #8ec5ff;
-		color: #dbeeff;
+		background-color: #0056b3;
+		color: white;
 		border: none;
 		border-radius: 4px;
 		cursor: pointer;
 	}
 	
-	button:hover { background-color: #0056b3; }
+	button:hover { background-color: #004494; }
 	
 	button.secondary {
 		background-color: #6c757d;
+		color: white;
 	}
 	button.secondary:hover { background-color: #5a6268; }
 	
 	button.danger {
         background-color: #dc3545;
+		color: white;
 	}
 	button.danger:hover { background-color: #bd2130; }
 	
@@ -240,26 +248,20 @@
 	.icon-button {
 		min-width: 36px;
 	}
-
-	.visually-hidden {
-		margin: 0;
-		height: 0;
-		overflow: hidden;
-	}
 	
 	table {
 		width: 100%;
 		border-collapse: collapse;
 	}
 	
-	thead td,
+	thead th,
 	tbody td {
 		padding: 10px;
 		border-bottom: 1px solid #ddd;
 		text-align: left;
 	}
 	
-	thead td {
+	thead th {
 		background-color: #f8f9fa;
 	}
 </style>
